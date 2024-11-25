@@ -1,0 +1,34 @@
+plugins {
+    id 'base'
+}
+
+task runApp(type: Exec) {
+    description = 'Run the Python application'
+    group = 'application'
+    commandLine 'python', 'app/controller.py'
+}
+
+task testApp(type: Exec) {
+    description = 'Run tests for the Python application'
+    group = 'verification'
+    workingDir = "${projectDir}" // Встановлюємо робочий каталог
+    commandLine 'pytest', '--maxfail=1', '--disable-warnings', 'tests'
+}
+
+
+
+task buildApp {
+    description = 'Prepare and validate the Python application'
+    group = 'build'
+    dependsOn testApp
+    doLast {
+        println 'Application build completed successfully!'
+    }
+}
+
+clean {
+    doLast {
+        println 'Cleaning up the project...'
+        delete 'build'
+    }
+}
